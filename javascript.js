@@ -91,96 +91,111 @@ let citesData = [{
 ];
 
 
-function createListElement(city){
+function createListElement(city) {
     let listElement = document.createElement('li');
-    listElement.setAttribute('class','city');
+    listElement.setAttribute('class', 'city');
     listElement.appendChild(getButton(city));
     return listElement;
 }
 
-function getButton(city){
+function getButton(city) {
     let button = document.createElement('button');
-    button.setAttribute('class','btn btn-primary btn-lg btn-block');
-    button.setAttribute('type','button');
-    button.setAttribute('data-toggle','collapse');
+    button.setAttribute('class', 'btn btn-primary btn-lg btn-block');
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-toggle', 'collapse');
     let cityName = formCityName(city);
-    button.setAttribute('data-target','#'+cityName);
-    button.innerHTML=city;
+    button.setAttribute('data-target', '#' + cityName);
+    button.innerHTML = city;
     return button;
 }
 
-function createTable(cityWeatherData){
+function createTable(cityWeatherData) {
     let table = document.createElement('table');
-    table.setAttribute('class','table table-striped');
+    table.setAttribute('class', 'table table-striped');
     table.appendChild(createTableHeader());
-    table.appendChild(createRow('Sky Status',cityWeatherData.weather[0].main));
-    table.appendChild(createRow('Sky Description',cityWeatherData.weather[0].description));
+    table.appendChild(createRow('Sky Status', cityWeatherData.weather[0].main));
+    table.appendChild(createRow('Sky Description', cityWeatherData.weather[0].description));
     table.appendChild(createRow('Current Temperature', cityWeatherData.main.temp));
-    table.appendChild(createRow('MIN Temperature',cityWeatherData.main.temp_min));
-    table.appendChild(createRow('MAX Temperature',cityWeatherData.main.temp_max));
+    table.appendChild(createRow('MIN Temperature', cityWeatherData.main.temp_min));
+    table.appendChild(createRow('MAX Temperature', cityWeatherData.main.temp_max));
     table.appendChild(createRow('Humidity', cityWeatherData.main.humidity));
-    table.appendChild(createRow('Wind Speed',cityWeatherData.wind.spped));
+    table.appendChild(createRow('Wind Speed', cityWeatherData.wind.spped));
     table.appendChild(createRow('Wind Direction', cityWeatherData.wind.deg));
     return table;
 }
 
-function createRow(label,value){
+function createRow(label, value) {
     let row = document.createElement('tr');
     row.appendChild(createColumn(label));
     row.appendChild(createColumn(value));
     return row;
 }
 
-function createColumn(data){
+function createColumn(data) {
     let column = document.createElement('td');
     column.innerHTML = data;
     return column;
 }
 
-function createTableHeader(){
+function createTableHeader() {
     let row = document.createElement('tr');
     let header = document.createElement('th');
-    header.setAttribute('colspan',2);
-    header.setAttribute('class','text-center');
-    header.innerHTML='Detailed Information';
+    header.setAttribute('colspan', 2);
+    header.setAttribute('class', 'text-center');
+    header.innerHTML = 'Detailed Information';
     row.appendChild(header);
     return row;
 }
 
-function dataTargetDivision(cityWeatherData){
+function dataTargetDivision(cityWeatherData) {
     let div = document.createElement('div');
-    div.setAttribute('class','collapse');
+    div.setAttribute('class', 'collapse');
     let city = formCityName(cityWeatherData.name);
-    div.setAttribute('id',city);
+    div.setAttribute('id', city);
     div.appendChild(createTable(cityWeatherData));
     return div;
 }
 
-function formCityName(city){
+function formCityName(city) {
     let words = city.split(' ');
     let cityName = words.join('_');
     return cityName;
 }
 
+
 function getData() {
-    let http = new XMLHttpRequest();
     let ids = citesData.map(cityData => cityData.id).join(',');
     const APPID = 'ecaa3f6b3b8983488e2ecbb8480ce808';
-    let weatherData;
-    http.onreadystatechange = function () {
-        if (http.readyState == 4) {
-            weatherData = JSON.parse(http.responseText);
+    fetch('http://api.openweathermap.org/data/2.5/group?id=' + ids + '&units=metric&APPID=' + APPID)
+        .then(response => response.json()).then(weatherData => {
             let unOrderdListElement = document.getElementById('citylist');
             weatherData.list.forEach(cityWeatherData => {
                 let listElement = createListElement(cityWeatherData.name);
                 unOrderdListElement.appendChild(listElement);
-                console.log(cityWeatherData);
                 let dataDivision  = (dataTargetDivision(cityWeatherData));
                 listElement.appendChild(dataDivision);
-            });
-        }
-    }
-
-    http.open('GET', 'http://api.openweathermap.org/data/2.5/group?id='+ ids +'&units=metric&APPID='+ APPID, true);
-    http.send();
+        });
+})
 }
+// function getData() {
+//     let http = new XMLHttpRequest();
+//     let ids = citesData.map(cityData => cityData.id).join(',');
+//     const APPID = 'ecaa3f6b3b8983488e2ecbb8480ce808';
+//     let weatherData;
+//     http.onreadystatechange = function () {
+//         if (http.readyState == 4) {
+//             weatherData = JSON.parse(http.responseText);
+//             let unOrderdListElement = document.getElementById('citylist');
+//             weatherData.list.forEach(cityWeatherData => {
+//                 let listElement = createListElement(cityWeatherData.name);
+//                 unOrderdListElement.appendChild(listElement);
+//                 console.log(cityWeatherData);
+//                 let dataDivision  = (dataTargetDivision(cityWeatherData));
+//                 listElement.appendChild(dataDivision);
+//             });
+//         }
+//     }
+
+//     http.open('GET', 'http://api.openweathermap.org/data/2.5/group?id='+ ids +'&units=metric&APPID='+ APPID, true);
+//     http.send();
+// }

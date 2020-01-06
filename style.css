@@ -17,3 +17,8 @@
 header{
     margin:3%;
 }
+
+li > *{
+    display: inline-flex;
+    justify-content: space-between;
+}
