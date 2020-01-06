@@ -8,3 +8,12 @@
 .city{
     margin-bottom: 20px;
 }
+
+#logo{
+    display: flex;
+    justify-content: space-around;
+}
+
+header{
+    margin:3%;
+}

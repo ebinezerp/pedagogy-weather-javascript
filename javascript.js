@@ -100,7 +100,7 @@ function createListElement(city){
 
 function getButton(city){
     let button = document.createElement('button');
-    button.setAttribute('class','btn btn-primary');
+    button.setAttribute('class','btn btn-primary btn-lg btn-block');
     button.setAttribute('type','button');
     button.setAttribute('data-toggle','collapse');
     let cityName = formCityName(city);
@@ -111,6 +111,7 @@ function getButton(city){
 
 function createTable(cityWeatherData){
     let table = document.createElement('table');
+    table.setAttribute('class','table table-striped');
     table.appendChild(createTableHeader());
     table.appendChild(createRow('Sky Status',cityWeatherData.weather[0].main));
     table.appendChild(createRow('Sky Description',cityWeatherData.weather[0].description));
@@ -140,6 +141,7 @@ function createTableHeader(){
     let row = document.createElement('tr');
     let header = document.createElement('th');
     header.setAttribute('colspan',2);
+    header.setAttribute('class','text-center');
     header.innerHTML='Detailed Information';
     row.appendChild(header);
     return row;
